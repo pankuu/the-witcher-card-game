@@ -27,6 +27,11 @@ class Card
      */
     private $power;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isBlocked;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,18 @@ class Card
     public function setPower(int $power): self
     {
         $this->power = $power;
+
+        return $this;
+    }
+
+    public function getIsBlocked(): ?bool
+    {
+        return $this->isBlocked;
+    }
+
+    public function setIsBlocked(bool $isBlocked): self
+    {
+        $this->isBlocked = $isBlocked;
 
         return $this;
     }

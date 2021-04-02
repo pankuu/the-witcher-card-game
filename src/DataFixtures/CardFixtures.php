@@ -22,6 +22,7 @@ class CardFixtures extends Fixture
             $card = new Card();
             $card->setTitle($title);
             $card->setPower($power);
+            $card->setIsBlocked(true);
             $manager->persist($card);
         }
         $manager->flush();

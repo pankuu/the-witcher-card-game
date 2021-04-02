@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Card;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,20 @@ class CardRepository extends ServiceEntityRepository
         parent::__construct($registry, Card::class);
     }
 
+    /**
+     * @param bool $isBlocked
+     * @return QueryBuilder
+     */
+    public function getAtLestBlockedCardQueryBuilder(bool $isBlocked = true): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.isBlocked = :required')
+            ->setParameter(':required', $isBlocked)
+            ->orWhere('c.isBlocked = :optional')
+            ->setParameter(':optional', false)
+            ->orderBy('c.id', 'ASC');;
+    }
+    
     // /**
     //  * @return Card[] Returns an array of Card objects
     //  */
