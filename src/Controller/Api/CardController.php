@@ -8,6 +8,7 @@ use App\Entity\Card;
 use App\Helper\CardValidate;
 use App\Repository\CardRepository;
 use App\Services\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,7 @@ class CardController extends AbstractController
     }
 
     /**
-     * @Route("/cards/{id}", name="remove_card", methods={"DELETE"}, requirements={"id":"\d+"})
+     * @Route("/cards/{title}", name="remove_card", methods={"DELETE"}, requirements={"id":"\d+"})
      * @param Card $card
      * @return JsonResponse
      */
@@ -61,7 +62,7 @@ class CardController extends AbstractController
             return $this->json(['status' => 'Not found.'], Response::HTTP_NOT_FOUND);
         }
 
-        if ($card->getIsBlocked() === true) {
+        if ($card->getIsBlocked()) {
             return $this->json(['status' => 'The super card cannot be deleted.'], Response::HTTP_OK);
         }
 
@@ -69,11 +70,11 @@ class CardController extends AbstractController
         $em->remove($card);
         $em->flush();
 
-        return $this->json(['status' => 'Customer deleted.'], Response::HTTP_NO_CONTENT);
+        return $this->json(['status' => 'The card was successfully deleted.'], Response::HTTP_OK);
     }
 
     /**
-     * @Route("/cards/{id}", name="update_card", methods={"PATCH"}, requirements={"id":"\d+"})
+     * @Route("/cards/{title}", name="update_card", methods={"PATCH"})
      * @param Card $card
      * @param Request $request
      * @param CardValidate $cardValidate
@@ -116,15 +117,13 @@ class CardController extends AbstractController
 
         $results = $paginator->paginate($queryBuilder, $request, 3);
 
-        $url = $request->getHttpHost().$request->getRequestUri();
-
         $data = [
             'status' => "Successfully fetched list",
             'data' => $results,
             'links' => [
-                'previous_page' => "{$url}?page={$paginator->previousPage($results, $request)}",
-                'next_page' => "{$url}?page={$paginator->nextPage($results, $request)}",
-                'last_page' => "{$url}?page={$paginator->lastPage($results)}",
+                'previous_page' => "?page={$paginator->previousPage($results, $request)}",
+                'next_page' => "?page={$paginator->nextPage($results, $request)}",
+                'last_page' => "?page={$paginator->lastPage($results)}",
                 'total_items' => "{$paginator->total($results)}"
             ]
         ];

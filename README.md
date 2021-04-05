@@ -4,8 +4,7 @@
 
 ```
 composer install
-./bin/console doctrine:database:create
-./bin/console doctrine:migrations:migrate
+./bin/console app:project-init
 ```
 
 ## Run
@@ -18,7 +17,16 @@ OR
 ./bin/console server:run
 ```
 
+## Run front
+
+```
+yarn install
+yarn watch
+```
+
 ## Tests
 ```
-./bin/phpunit
+./bin/phpunit tests/Controller/Api/CardControllerTest.php
+./bin/phpunit tests/Controller/Api/DeckControllerTest.php
+./bin/phpunit tests/Controller/Api/GameControllerTest.php
 ```

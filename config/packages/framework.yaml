@@ -18,4 +18,4 @@ framework:
 
     validation: { enable_annotations: true }
 
-    error_controller: App\Controller\ErrorController::index
+#    error_controller: App\Controller\ErrorController::index

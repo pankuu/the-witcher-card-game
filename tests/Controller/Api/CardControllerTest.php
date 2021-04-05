@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CardControllerTest extends DataFixtureTestCase
 {
-    public function testCreate()
+    public function testCreate(): void
     {
         $card = [
             'title' => 'Batman',
@@ -31,7 +31,7 @@ class CardControllerTest extends DataFixtureTestCase
         $this->keepDatabaseAfterTest();
     }
 
-    public function testCreateTitleUsed()
+    public function testCreateTitleUsed(): void
     {
         $card = [
             'title' => 'Geralt',
@@ -53,24 +53,24 @@ class CardControllerTest extends DataFixtureTestCase
     }
 
 
-    public function testRemove()
+    public function testRemove(): void
     {
         static::$client->request(
             'DELETE',
-            '/api/cards/6'
+            '/api/cards/Batman'
         );
 
         $this->isJson();
         $this->assertResponseIsSuccessful();
-        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->keepDatabaseAfterTest();
     }
 
-    public function testRemoveBlockedCard()
+    public function testRemoveBlockedCard(): void
     {
         static::$client->request(
             'DELETE',
-            '/api/cards/1'
+            '/api/cards/Geralt'
         );
 
         $response = json_decode(static::$client->getResponse()->getContent(), true);
@@ -81,22 +81,37 @@ class CardControllerTest extends DataFixtureTestCase
         $this->keepDatabaseAfterTest();
     }
 
-    public function testRemoveNoResource()
+    public function testRemoveNoResource(): void
     {
+        $card = [
+            'title' => 'BatmanTest',
+            'power' => 6
+        ];
+
         static::$client->request(
-            'DELETE',
-            '/api/cards/'
+            'POST',
+            '/api/cards',
+            $card
         );
 
         $response = json_decode(static::$client->getResponse()->getContent(), true);
 
         $this->isJson();
         $this->assertArrayHasKey('status', $response);
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+        $this->keepDatabaseAfterTest();
+
+        static::$client->request(
+            'DELETE',
+            "/api/cards/BatmanTes"
+        );
+
+        $this->isJson();
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $this->keepDatabaseAfterTest();
     }
 
-    public function testUpdateBlockedCard()
+    public function testUpdateBlockedCard(): void
     {
         $card = [
             'title' => 'Geralt Siwy',
@@ -105,7 +120,7 @@ class CardControllerTest extends DataFixtureTestCase
 
         static::$client->request(
             'PATCH',
-            '/api/cards/1',
+            '/api/cards/Geralt',
             $card
         );
 
@@ -117,39 +132,39 @@ class CardControllerTest extends DataFixtureTestCase
         $this->keepDatabaseAfterTest();
     }
 
-    public function testUpdateNormalCard()
+    public function testUpdateNormalCard(): void
     {
         $card = [
-            'title' => 'Geralt Siwy',
+            'title' => 'Geralt Srebrny',
             'power' => 10
         ];
 
         static::$client->request(
             'POST',
-            '/api/cards/1',
+            '/api/cards',
             $card
         );
 
         $newCard = [
-            'title' => 'Geralt Stary',
+            'title' => 'Geralt Srebrny',
             'power' => 1
         ];
 
         static::$client->request(
             'PATCH',
-            '/api/cards/1',
+            "/api/cards/{$card['title']}",
             $newCard
         );
 
         $response = json_decode(static::$client->getResponse()->getContent(), true);
 
         $this->isJson();
-        $this->assertArrayHasKey('status', $response);
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertArrayHasKey('title', $response);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $this->keepDatabaseAfterTest();
     }
 
-    public function testUpdateNotFound()
+    public function testUpdateNotFound(): void
     {
         $card = [
             'title' => 'Geralt Siwy',
@@ -162,15 +177,12 @@ class CardControllerTest extends DataFixtureTestCase
             $card
         );
 
-        $response = json_decode(static::$client->getResponse()->getContent(), true);
-
         $this->isJson();
-        $this->assertArrayHasKey('status', $response);
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $this->keepDatabaseAfterTest();
     }
 
-    public function testList()
+    public function testList(): void
     {
         static::$client->request(
             'GET',
@@ -184,5 +196,6 @@ class CardControllerTest extends DataFixtureTestCase
         $this->assertArrayHasKey('data', $response);
         $this->assertArrayHasKey('links', $response);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->keepDatabaseAfterTest();
     }
 }
