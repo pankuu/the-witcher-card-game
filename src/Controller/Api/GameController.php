@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class GameController extends AbstractController
 {
     /**
-     * @Route("/games", name="api_games", methods={"POST"})
+     * @Route("/games", name="games", methods={"POST"})
      */
     public function play(Request $request, GameService $game): JsonResponse
     {
@@ -34,7 +34,7 @@ class GameController extends AbstractController
         $match = $game->play($host, $guest, $numberOfCards);
 
         if ($match instanceof \Exception) {
-            return $this->json(['status' => $match->getMessage()], 400);
+            return $this->json(['status' => $match->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         return $this->json($match);

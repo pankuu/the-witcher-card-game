@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeckController extends AbstractController
 {
     /**
-     * @Route("/decks", name="api_decks", methods={"POST"})
+     * @Route("/decks", name="decks", methods={"POST"})
      */
     public function create(Request $request): JsonResponse
     {
@@ -44,7 +44,7 @@ class DeckController extends AbstractController
     }
 
     /**
-     * @Route("/decks", name="api_decks_card", methods={"PUT"})
+     * @Route("/decks", name="decks_card", methods={"PUT"})
      */
     public function addCard(Request $request, DeckRepository $deckRepository,
         CardRepository $cardRepository, DeckCardRepository $deckCardRepository): JsonResponse
@@ -103,7 +103,7 @@ class DeckController extends AbstractController
     }
 
     /**
-     * @Route("/decks/{name}/cards/{title}", name="api_remove_decks_card", methods={"DELETE"})
+     * @Route("/decks/{name}/cards/{title}", name="remove_decks_card", methods={"DELETE"})
      */
     public function remove(Deck $deck, Card $card, DeckCardRepository $deckCardRepository): JsonResponse
     {
@@ -126,7 +126,7 @@ class DeckController extends AbstractController
     }
 
     /**
-     * @Route("/decks/{name}", name="api_get_decks_card", methods={"GET"})
+     * @Route("/decks/{name}", name="get_decks_card", methods={"GET"})
      */
     public function list(Deck $deck, DeckCardRepository $deckCardRepository, CardRepository $cardRepository)
     {
