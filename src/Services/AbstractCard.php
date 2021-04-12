@@ -30,12 +30,15 @@ abstract class AbstractCard implements Card, Observer
 
     public function drawCards(): void
     {
-        $cards = $this->drawCards;
+        $cardsDraw = $this->drawCards;
 
         if ($this->numberOfCards > 1) {
-            $rand = array_rand($cards, $this->numberOfCards);
+            $rand = array_rand($cardsDraw, $this->numberOfCards);
             $flip = array_flip($rand);
-            $cards = array_intersect_key($cards, $flip);
+            $cards = array_intersect_key($cardsDraw, $flip);
+        } else {
+            $rand = array_rand($cardsDraw, $this->numberOfCards);
+            $cards[] = $cardsDraw[$rand];
         }
 
         foreach ($cards as $card) {
@@ -93,11 +96,6 @@ abstract class AbstractCard implements Card, Observer
     public function getType(): string
     {
         return $this->type;
-    }
-
-    public function getPowerBonus(): int
-    {
-        return $this->powerBonus;
     }
 
     public function getName(): string

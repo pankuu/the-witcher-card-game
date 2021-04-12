@@ -1,8 +1,15 @@
 import React from "react";
 
-const Cards = (props) => {
+const Card = (props) => {
 
-    const {cards, links, onDeleteCard, isLoaded, isSavingNewCard, message} = props;
+    const {
+        cards,
+        links,
+        onDeleteCard,
+        onSelectCard,
+        isLoadedCards,
+        isSavingNewCard,
+    } = props;
 
     const handleDeleteClick = function (event, cardTitle) {
         event.preventDefault();
@@ -10,7 +17,13 @@ const Cards = (props) => {
         onDeleteCard(cardTitle);
     };
 
-    if (!isLoaded) {
+    const handleClick = function (event, cardTitle) {
+        event.preventDefault();
+
+        onSelectCard(cardTitle);
+    };
+
+    if (!isLoadedCards) {
         return (
             <div>
                 <h3 className="text-center">Loading...</h3>
@@ -20,11 +33,6 @@ const Cards = (props) => {
 
     return (
         <div>
-            {message && (
-                <div className="alert alert-success text-center">
-                    {message}
-                </div>
-            )}
             <h4>Total cards ({links && links.total_items})</h4>
             <table className="table table-striped">
                 <thead>
@@ -39,6 +47,8 @@ const Cards = (props) => {
                 {cards.map((card) => (
                     <tr
                         key={card.id}
+                        style={{cursor:'pointer'}}
+                        onClick={(event => handleClick(event, card.title))}
                     >
                         <td>{card.id}</td>
                         <td>{card.title}</td>
@@ -49,6 +59,7 @@ const Cards = (props) => {
                                 <i className="trash icon"/>
                             </a>
                             }
+                            {card.isBlocked && <i className="lock icon" />}
                         </td>
                     </tr>
                 ))}
@@ -60,7 +71,8 @@ const Cards = (props) => {
                             style={{
                                 opacity: .5
                             }}
-                        >Saving to the database ...
+                        >
+                            Saving to the database ...
                         </td>
                     </tr>
                 )}
@@ -70,4 +82,4 @@ const Cards = (props) => {
     );
 }
 
-export default Cards;
+export default Card;
