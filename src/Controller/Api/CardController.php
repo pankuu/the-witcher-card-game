@@ -8,7 +8,6 @@ use App\Entity\Card;
 use App\Helper\CardValidate;
 use App\Repository\CardRepository;
 use App\Services\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

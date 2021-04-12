@@ -8,11 +8,16 @@ function fetchJson(url, options) {
         delete options.headers;
     }
 
-    return fetch(url, Object.assign({
+    let target = {
         credentials: 'same-origin',
         headers: headers,
-        mode: 'no-cors',
-    }, options))
+    }
+
+    if (options && 'DELETE' !== options.method) {
+        target.mode = 'no-cors';
+    }
+
+    return fetch(url, Object.assign(target, options))
         .then(checkStatus)
         .then(response => {
             // decode JSON, but avoid problems with empty responses
@@ -37,15 +42,15 @@ export function getCards() {
         .then(data => data);
 }
 
-export function deleteCards(id) {
-    return fetchJson(`/api/cards/${id}`, {
+export function deleteCards(title) {
+    return fetchJson(`/api/cards/${title}`, {
         method: 'DELETE'
     });
 }
 
 export function createCards(cards) {
-    return fetchJson('/api/card', {
+    return fetchJson('/api/cards', {
         method: 'POST',
-        body: JSON.stringify(cards)
+        body: cards
     });
 }
