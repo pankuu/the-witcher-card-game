@@ -1,7 +1,10 @@
 import {fetchJson} from "./fetch_api";
 
-export function getCards() {
-    return fetchJson('/api/cards')
+export function getCards(uri = null) {
+    let url = '/api/cards';
+    if (uri) url = url + uri;
+
+    return fetchJson(url)
         .then(data => data);
 }
 

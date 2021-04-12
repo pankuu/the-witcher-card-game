@@ -7,6 +7,7 @@ namespace App\Controller\Api;
 use App\Entity\Card;
 use App\Helper\CardValidate;
 use App\Repository\CardRepository;
+use App\Repository\DeckCardRepository;
 use App\Services\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +56,7 @@ class CardController extends AbstractController
      * @param Card $card
      * @return JsonResponse
      */
-    public function remove(Card $card): JsonResponse
+    public function remove(Card $card, DeckCardRepository $deckCardRepository): JsonResponse
     {
         if (!$card) {
             return $this->json(['status' => 'Not found.'], Response::HTTP_NOT_FOUND);
@@ -64,6 +65,7 @@ class CardController extends AbstractController
         if ($card->getIsBlocked()) {
             return $this->json(['status' => 'The super card cannot be deleted.'], Response::HTTP_OK);
         }
+        $deckCardRepository->remove($card->getId());
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($card);

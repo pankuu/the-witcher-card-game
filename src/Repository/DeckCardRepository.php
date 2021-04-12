@@ -19,6 +19,16 @@ class DeckCardRepository extends ServiceEntityRepository
         parent::__construct($registry, DeckCard::class);
     }
 
+    public function remove($cardId): void
+    {
+        $qb = $this->createQueryBuilder('dc')
+            ->delete('App:DeckCard', 'dc')
+            ->andWhere('dc.card_id = :cardId')
+            ->setParameter('cardId', $cardId);
+
+        $qb->getQuery()->execute();
+    }
+
     // /**
     //  * @return DeckCard[] Returns an array of DeckCard objects
     //  */

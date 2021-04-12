@@ -9,6 +9,8 @@ const Card = (props) => {
         onSelectCard,
         isLoadedCards,
         isSavingNewCard,
+        onNextPage,
+        onPrevPage,
     } = props;
 
     const handleDeleteClick = function (event, cardTitle) {
@@ -22,6 +24,18 @@ const Card = (props) => {
 
         onSelectCard(cardTitle);
     };
+
+    const handleClickNextPage = function(event) {
+        event.preventDefault();
+
+        onNextPage(links.next_page)
+    }
+
+    const handleClickPreviousPage = function(event) {
+        event.preventDefault();
+
+        onPrevPage(links.previous_page)
+    }
 
     if (!isLoadedCards) {
         return (
@@ -47,13 +61,16 @@ const Card = (props) => {
                 {cards.map((card) => (
                     <tr
                         key={card.id}
-                        style={{cursor:'pointer'}}
-                        onClick={(event => handleClick(event, card.title))}
                     >
                         <td>{card.id}</td>
-                        <td>{card.title}</td>
+                        <td
+                            style={{cursor:'pointer'}}
+                            onClick={(event => handleClick(event, card.title))}
+                        >
+                            {card.title}
+                        </td>
                         <td>{card.power}</td>
-                        <td>
+                        <td style={{cursor:'pointer'}}>
                             {!card.isBlocked &&
                             <a href="#" onClick={(event) => handleDeleteClick(event, card.title)}>
                                 <i className="trash icon"/>
@@ -77,6 +94,26 @@ const Card = (props) => {
                     </tr>
                 )}
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td>&nbsp;</td>
+                    <th>
+                        <i
+                            className="chevron left icon"
+                            style={{cursor:'pointer'}}
+                            onClick={handleClickPreviousPage}
+                        />
+                    </th>
+                    <th>
+                        <i
+                            className="chevron right icon"
+                            style={{cursor:'pointer'}}
+                            onClick={handleClickNextPage}
+                        />
+                    </th>
+                    <td>&nbsp;</td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     );

@@ -45,12 +45,16 @@ const Deck = (props) => {
                 {decks.map((deck) => (
                     <tr
                         key={deck.id}
-                        style={{cursor:'pointer'}}
-                        onClick={(event) => handleClick(event, deck.name)}
+
                     >
                         <td>{deck.id}</td>
-                        <td>{deck.name}</td>
-                        <td>
+                        <td
+                            style={{cursor:'pointer'}}
+                            onClick={(event) => handleClick(event, deck.name)}
+                        >
+                            {deck.name}
+                        </td>
+                        <td style={{cursor:'pointer'}}>
                             <a href="#" onClick={(event => handleShowDeckCards(event, deck.name))}>
                                 <i className="angle double right icon" />
                             </a>

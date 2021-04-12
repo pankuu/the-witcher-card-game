@@ -122,8 +122,7 @@ class DeckController extends AbstractController
             return $this->json(['status' => 'No card found in deck'], Response::HTTP_NOT_FOUND);
         }
 
-        $deckCard = $deckCardRepository->findOneBy(['deck_id' => $deckId, 'card_id' => $cardId,
-        ]);
+        $deckCard = $deckCardRepository->findOneBy(['deck_id' => $deckId, 'card_id' => $cardId,]);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($deckCard);
@@ -136,9 +135,13 @@ class DeckController extends AbstractController
     /**
      * @Route("/decks/{name}", name="get_decks_card", methods={"GET"})
      */
-    public function list(Deck $deck, DeckCardRepository $deckCardRepository, CardRepository $cardRepository)
+    public function list(string $name, DeckRepository $deckRepository, DeckCardRepository $deckCardRepository, CardRepository $cardRepository)
     {
-        $deckId = $deck->getId();
+        $deckId = $deckRepository->findOneBy(['name' => $name]);
+
+        if (!$deckId) {
+            return $this->json(['status' => 'Wrong deck name.'], Response::HTTP_BAD_REQUEST);
+        }
 
         $deckCards = $deckCardRepository->findBy(['deck_id' => $deckId]);
 

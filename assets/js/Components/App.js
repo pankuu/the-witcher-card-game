@@ -12,8 +12,6 @@ import DisplayResults from "./DisplayResults";
 
 class App extends Component {
 
-    // _isMounted = false;
-
     constructor(props) {
         super(props);
 
@@ -22,7 +20,6 @@ class App extends Component {
             decks: [],
             isLoadedCards: false,
             isLoadedDecks: false,
-            _isMounted: false,
             links: [],
             title: '',
             power: 0,
@@ -45,10 +42,11 @@ class App extends Component {
         this.handleDeckCard = this.handleDeckCard.bind(this);
         this.handleShowDeckCards = this.handleShowDeckCards.bind(this);
         this.handlePlay = this.handlePlay.bind(this);
+        this.handleNextPage = this.handleNextPage.bind(this);
+        this.handlePreviousPage = this.handlePreviousPage.bind(this);
     }
 
     componentDidMount() {
-        this.state._isMounted = true;
         this.fetchCards();
         this.fetchDecks();
     }
@@ -73,13 +71,13 @@ class App extends Component {
     handleDeleteCard(title) {
         deleteCards(title)
             .then(res => {
-                this.setState({message: res.status})
+                this.setState({message: res.status, isLoadedCards: false})
                 this.setMessage(res.status)
             });
     }
 
-    fetchCards() {
-        getCards().then((data) => {
+    fetchCards(url = null) {
+        getCards(url).then((data) => {
             this.setState({
                 cards: data.data,
                 isLoadedCards: true,
@@ -111,6 +109,14 @@ class App extends Component {
 
     handleSelectCard(title) {
         this.setState({selectedCard: title})
+    }
+
+    handleNextPage(url) {
+        this.fetchCards(url)
+    }
+
+    handlePreviousPage(url) {
+        this.fetchCards(url)
     }
 
     /// DECKS ///
@@ -212,6 +218,8 @@ class App extends Component {
                         {...this.props}
                         onDeleteCard={this.handleDeleteCard}
                         onSelectCard={this.handleSelectCard}
+                        onNextPage={this.handleNextPage}
+                        onPrevPage={this.handlePreviousPage}
                     />
                 </div>
                 <div className="float-child">
