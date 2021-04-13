@@ -179,6 +179,9 @@ class App extends Component {
 
         play(formData)
             .then((res) => {
+                if (res.status) {
+                    alert(res.status);
+                }
                 this.setState({game: res})
             })
     }

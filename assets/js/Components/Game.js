@@ -39,12 +39,10 @@ class Game extends Component {
                         <input
                             placeholder="Number of cards"
                             className="form-control"
-                            ref={this.numberOfCards}
                             required="required"
                             id="cards"
                             type="number"
                             min="0"
-                            max={cards.length}
                         />
                     </div>
                     <div className="form-group">
