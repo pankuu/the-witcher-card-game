@@ -12,3 +12,17 @@ body {
     width: 250px;
     grid-row-end: span 2;
 }
+
+.float-container {
+    padding: 20px;
+}
+
+.float-child {
+    width: 33.3%;
+    float: left;
+    padding: 20px;
+}
+
+.center {
+    text-align: center;
+}

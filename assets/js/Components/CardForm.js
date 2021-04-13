@@ -1,51 +1,58 @@
 import React, {Component} from 'react'
-import {createCards} from './api/api_cards'
-
 
 class CardForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            title: '',
-            power: 0
-        }
+        this.titleInput = React.createRef();
+        this.powerInput = React.createRef();
+
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
-    handleChangePower = event => {
-        this.setState({power: event.target.value})
-    }
+    handleFormSubmit(event) {
+        event.preventDefault();
+        const {onNewCardSubmit} = this.props;
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Event: Form Submit');
-        const data = {
-            title: this.state.title,
-            power: this.state.power,
-        };
+        const title = this.titleInput.current;
+        const power = this.powerInput.current;
 
-        createCards(data)
-            .then(cards => {
-                console.log(cards)
-            })
-    }
+        onNewCardSubmit(
+            title.value,
+            power.value
+        )
 
-    handleChangeTitle = event => {
-        this.setState({title: event.target.value})
+        title.value = '';
+        power.value = '';
     }
 
     render() {
         return (
             <div className="container ui">
-                <h1>Add card</h1>
-                <form className="ui form" onSubmit={() => this.handleSubmit()}>
-                    Title:<br/>
-                    <input name="title" value={this.state.name} type="text" onChange={this.handleChangeTitle}/><br/>
-                    Power:<br/>
-                    <input name="power" value={this.state.power} type="number" min="0"
-                           onChange={this.handleChangePower}
-                    /><br/>
-                    <button type ="submit">Add Card</button>
+                <form className="form-inline" onSubmit={this.handleFormSubmit}>
+                    <div className="form-group">
+                        <input
+                            placeholder="Title"
+                            className="form-control"
+                            ref={this.titleInput}
+                            required="required"
+                            type="text"
+                            id="card_title"/>
+                    </div>
+                    <div className="form-group">
+                        <input
+                            placeholder="Power"
+                            className="form-control"
+                            ref={this.powerInput}
+                            required="required"
+                            type="number"
+                            id="card_power"
+                            min="0"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input type="submit" className="btn btn-primary" value="Add Card"/>
+                    </div>
                 </form>
             </div>
         )

@@ -55,6 +55,7 @@ class Game implements Observable
     public function getWinner(): void
     {
         $win = [];
+        $message = '';
 
         foreach ($this->winner as $key => $item) {
             if (empty($win)) {
@@ -62,10 +63,14 @@ class Game implements Observable
             }
 
             if ($win['overall'] < $item['overall']) {
-                $win = "The winner is: {$item['name']}";
+                $message = "The winner is: {$item['name']}";
+            } else if ($win['overall'] > $item['overall']) {
+                $message = "The winner is: {$win['name']}";
+            } else {
+                $message = "Dead-heat";
             }
         }
 
-        $this->result['message'] = $win;
+        $this->result['message'] = $message;
     }
 }

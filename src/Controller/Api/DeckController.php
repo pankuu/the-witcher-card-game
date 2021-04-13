@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeckController extends AbstractController
 {
     /**
-     * @Route("/decks", name="api_decks", methods={"POST"})
+     * @Route("/decks", name="decks", methods={"POST"})
      */
     public function create(Request $request): JsonResponse
     {
@@ -33,10 +33,17 @@ class DeckController extends AbstractController
             return $this->json(['status' => 'Deck name is mandatory.'], Response::HTTP_BAD_REQUEST);
         }
 
+        $em = $this->getDoctrine()->getManager();
+
+        $deck = $em->getRepository(Deck::class)->findOneBy(['name' => $name]);
+
+        if ($deck) {
+            return $this->json(['status' => 'Deck name is taken.'], Response::HTTP_OK);
+        }
+
         $deck = new Deck();
         $deck->setName($name);
 
-        $em = $this->getDoctrine()->getManager();
         $em->persist($deck);
         $em->flush();
 
@@ -44,29 +51,30 @@ class DeckController extends AbstractController
     }
 
     /**
-     * @Route("/decks", name="api_decks_card", methods={"PUT"})
+     * @Route("/decks/{deck}", name="decks_card", methods={"PUT"})
      */
-    public function addCard(Request $request, DeckRepository $deckRepository,
-        CardRepository $cardRepository, DeckCardRepository $deckCardRepository): JsonResponse
+    public function addCard(string $deck, Request $request, DeckRepository $deckRepository,
+                            CardRepository $cardRepository, DeckCardRepository $deckCardRepository): JsonResponse
     {
-        $name = $request->get('name');
         $cards = $request->get('cards');
 
-        $deck = $deckRepository->findOneBy(['name' => $name]);
+        $deck = $deckRepository->findOneBy(['name' => $deck]);
 
-        $deckCards = $deckCardRepository->findBy(['deck_id' => $deck->getId()]);
+        if ($deck) {
+            $deckCards = $deckCardRepository->findBy(['deck_id' => $deck->getId()]);
 
-        if (count($deckCards) > 10) {
-            return $this->json([
-                'status' => 'The maximum number of cards (10) in the deck has been reached.'
-            ], Response::HTTP_OK);
+            if (count($deckCards) > 10) {
+                return $this->json([
+                    'status' => 'The maximum number of cards (10) in the deck has been reached.'
+                ], Response::HTTP_OK);
+            }
         }
 
         $em = $this->getDoctrine()->getManager();
 
         if (!$deck) {
             $deck = new Deck();
-            $deck->setName($name);
+            $deck->setName($deck);
             $em->persist($deck);
             $em->flush();
         }
@@ -103,7 +111,7 @@ class DeckController extends AbstractController
     }
 
     /**
-     * @Route("/decks/{name}/cards/{title}", name="api_remove_decks_card", methods={"DELETE"})
+     * @Route("/decks/{name}/cards/{title}", name="remove_decks_card", methods={"DELETE"})
      */
     public function remove(Deck $deck, Card $card, DeckCardRepository $deckCardRepository): JsonResponse
     {
@@ -114,8 +122,7 @@ class DeckController extends AbstractController
             return $this->json(['status' => 'No card found in deck'], Response::HTTP_NOT_FOUND);
         }
 
-        $deckCard = $deckCardRepository->findOneBy(['deck_id' => $deckId, 'card_id' => $cardId,
-        ]);
+        $deckCard = $deckCardRepository->findOneBy(['deck_id' => $deckId, 'card_id' => $cardId,]);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($deckCard);
@@ -126,11 +133,15 @@ class DeckController extends AbstractController
     }
 
     /**
-     * @Route("/decks/{name}", name="api_get_decks_card", methods={"GET"})
+     * @Route("/decks/{name}", name="get_decks_card", methods={"GET"})
      */
-    public function list(Deck $deck, DeckCardRepository $deckCardRepository, CardRepository $cardRepository)
+    public function list(string $name, DeckRepository $deckRepository, DeckCardRepository $deckCardRepository, CardRepository $cardRepository)
     {
-        $deckId = $deck->getId();
+        $deckId = $deckRepository->findOneBy(['name' => $name]);
+
+        if (!$deckId) {
+            return $this->json(['status' => 'Wrong deck name.'], Response::HTTP_BAD_REQUEST);
+        }
 
         $deckCards = $deckCardRepository->findBy(['deck_id' => $deckId]);
 
@@ -141,5 +152,15 @@ class DeckController extends AbstractController
         }
 
         return $this->json(['power' => $power], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/decks", name="get_decks", methods={"GET"})
+     */
+    public function getDecks(): JsonResponse
+    {
+        $data = $this->getDoctrine()->getRepository(Deck::class)->findAllDecksSortedByAsc();
+
+        return $this->json(['data' => $data], Response::HTTP_OK);
     }
 }

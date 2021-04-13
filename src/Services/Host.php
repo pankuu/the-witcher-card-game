@@ -33,6 +33,6 @@ class Host extends AbstractCard implements Card
      */
     public function getPowerBonus(): int
     {
-        return $this->powerBonus = rand(-2, 2);
+        return $this->powerBonus = rand(-1, 2);
     }
 }

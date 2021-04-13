@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %} The Witcher Cards {% endblock %}
+{% block body %}
+    <div>
+        <div id="root"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('build/the_witcher_game_react.js') }}"></script>
+{% endblock %}

@@ -60,12 +60,10 @@ class DeckControllerTest extends DataFixtureTestCase
             'cards' => 'Ciri'
         ];
 
-        $data = array_merge($card, $deck);
-
         static::$client->request(
             'PUT',
-            '/api/decks',
-            $data
+            "/api/decks/{$deck['name']}",
+            $card
         );
 
         $this->isJson();
