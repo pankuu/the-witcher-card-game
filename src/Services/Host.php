@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * Class Host
  * @package App\Services
  */
-class Host extends AbstractCard implements Card
+class Host extends AbstractCard implements CardInterface
 {
     /**
      * @var string

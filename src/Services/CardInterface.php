@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-interface Card
+interface CardInterface
 {
     public function move(): void;
 

@@ -6,7 +6,7 @@ namespace App\Services;
 
 use Doctrine\ORM\EntityManagerInterface;
 
-class Guest extends AbstractCard implements Card
+class Guest extends AbstractCard implements CardInterface
 {
     /**
      * @var string
