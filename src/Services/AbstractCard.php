@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\Deck;
 use App\Entity\DeckCard;
 
-abstract class AbstractCard implements Card, Observer
+abstract class AbstractCard implements CardInterface, Observer
 {
     protected $card = [];
     protected $cardPower;

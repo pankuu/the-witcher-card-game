@@ -37,7 +37,7 @@ class GameBuilder
         $this->numberOfCards = $numberOfCards;
     }
 
-    public function build(): Card
+    public function build(): CardInterface
     {
         $card = null;
         switch ($this->type) {

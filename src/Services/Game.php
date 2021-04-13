@@ -8,12 +8,12 @@ class Game implements Observable
 {
     use ObservedTrait;
 
-    /** @var Card[] */
+    /** @var CardInterface[] */
     private $cards = [];
     private $result = [];
     private $winner = [];
 
-    public function addCard(Card $card): void
+    public function addCard(CardInterface $card): void
     {
         $this->addObserver($card);
         $this->cards[] = $card;

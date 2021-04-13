@@ -16,7 +16,7 @@ class CardFactory
         self::$entityManager = $entityManager;
     }
 
-    public static function factory(string $type, string $name, int $numberOfCards): Card
+    public static function factory(string $type, string $name, int $numberOfCards): CardInterface
     {
         $card = null;
 
