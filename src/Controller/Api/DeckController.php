@@ -56,7 +56,8 @@ class DeckController extends AbstractController
     public function addCard(string $deck, Request $request, DeckRepository $deckRepository,
                             CardRepository $cardRepository, DeckCardRepository $deckCardRepository): JsonResponse
     {
-        $cards = $request->get('cards');
+        $data = json_decode($request->getContent());
+        $cards = $data->cards;
 
         $deck = $deckRepository->findOneBy(['name' => $deck]);
 
@@ -71,13 +72,6 @@ class DeckController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-
-        if (!$deck) {
-            $deck = new Deck();
-            $deck->setName($deck);
-            $em->persist($deck);
-            $em->flush();
-        }
 
         $items = explode(',', $cards);
 
@@ -104,7 +98,7 @@ class DeckController extends AbstractController
         $em->flush();
 
         if ($errors) {
-            return $this->json($errors, 400);
+            return $this->json($errors, Response::HTTP_OK);
         }
 
         return $this->json([], Response::HTTP_NO_CONTENT);
