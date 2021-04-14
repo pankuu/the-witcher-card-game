@@ -1,19 +1,30 @@
 import React, {Component} from 'react'
 
-const ChooseDeckForm = (props) => {
+class ChooseDeckForm extends Component {
+    constructor(props) {
+        super(props);
 
-    const {decks, itemSelect}  = props;
+        this.state = {
+            value: ''
+        }
 
+        this.handleSelect = this.handleSelect.bind(this)
+    }
 
+    handleSelect(e) {
+        const {onNewDeckSelect} = this.props
+        const value = e.target.value
+        onNewDeckSelect(value);
+        this.setState({value})
+    }
 
-    return (
-        <form className="form-inline">
+    render() {
+        const {decks} = this.props;
+        return (
             <div className="form-group">
-                <label className="sr-only control-label required" htmlFor="deck">
-                    Select host?
-                </label>
                 <select
-                    // ref={itemSelect}
+                    value={this.state.value}
+                    onChange={this.handleSelect}
                     id="deck"
                     required="required"
                     className="form-control"
@@ -24,8 +35,8 @@ const ChooseDeckForm = (props) => {
                     ))}
                 </select>
             </div>
-        </form>
-    )
+        )
+    }
 }
 
 export default ChooseDeckForm;

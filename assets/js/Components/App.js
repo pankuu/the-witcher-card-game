@@ -236,8 +236,11 @@ class App extends Component {
                     <DeckCard{...this.state} handleSelectedDeckCard={this.handleDeckCard}/>
                 </div>
                 <div className="float-child">
-                    <Game{...this.state} onPlaySubmit={this.handlePlay}/>
-                    <DisplayResults game={game}/>
+                    <Game {...this.state} onPlaySubmit={this.handlePlay}/>
+                    <DisplayResults
+                        {...this.state}
+                        game={game}
+                    />
                 </div>
             </div>
         );
