@@ -63,7 +63,10 @@ class DeckControllerTest extends DataFixtureTestCase
         static::$client->request(
             'PUT',
             "/api/decks/{$deck['name']}",
-            $card
+            [],
+            [],
+            [],
+            json_encode($card)
         );
 
         $this->isJson();
@@ -89,19 +92,20 @@ class DeckControllerTest extends DataFixtureTestCase
 
         $card = ['cards' => 'CardTestFailed'];
 
-        $data = array_merge($card, $deck);
-
         static::$client->request(
             'PUT',
-            '/api/decks',
-            $data
+            "/api/decks/{$deck['name']}",
+            [],
+            [],
+            [],
+            json_encode($card)
         );
 
         $response = json_decode(static::$client->getResponse()->getContent(), true);
 
         $this->isJson();
         $this->assertArrayHasKey('status', $response);
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->keepDatabaseAfterTest();
     }
 
@@ -125,12 +129,13 @@ class DeckControllerTest extends DataFixtureTestCase
             'cards' => 'Ciri'
         ];
 
-        $data = array_merge($card, $deck);
-
         static::$client->request(
             'PUT',
-            '/api/decks',
-            $data
+            "/api/decks/${deck['name']}",
+            [],
+            [],
+            [],
+            json_encode($card)
         );
 
         $this->isJson();
