@@ -8,16 +8,10 @@ export function fetchJson(url, options) {
         delete options.headers;
     }
 
-    let target = {
+    return fetch(url, Object.assign({
         credentials: 'same-origin',
         headers: headers,
-    }
-
-    if (options && ('DELETE' !== options.method) && ('PUT' !== options.method)) {
-        target.mode = 'no-cors';
-    }
-
-    return fetch(url, Object.assign(target, options))
+        }, options))
         .then(checkStatus)
         .then(response => {
             // decode JSON, but avoid problems with empty responses

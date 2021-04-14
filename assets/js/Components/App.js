@@ -2,13 +2,14 @@ import React, {Component} from "react";
 import {createCards, deleteCards, getCards} from "./api/api_cards";
 import Card from './Card'
 import CardForm from './CardForm'
-import {addCardToDeck, createDecks, getDecks, listDeck} from "./api/api_decks";
+import {createDecks, getDecks, listDeck} from "./api/api_decks";
 import DeckForm from "./DeckForm";
 import Deck from "./Deck";
 import DeckCard from "./DeckCard";
 import Game from "./Game";
 import {play} from "./api/api_game";
 import DisplayResults from "./DisplayResults";
+import axios from 'axios'
 
 class App extends Component {
 
@@ -155,13 +156,19 @@ class App extends Component {
     }
 
     handleDeckCard(deck, card) {
-        const formData = new FormData();
-        formData.append('cards', card);
-
-        addCardToDeck(deck, formData)
-            .then(res => {
-                console.log(res)
-            })
+        axios.put(`/api/decks/${deck}`, {
+            cards: card
+        }).then((res) => {
+            if (res.status === 204) {
+                this.setMessage(`Successfully added card to deck: ${deck}`)
+                this.setState({
+                    selectedDeck: '',
+                    selectedCard: ''
+                })
+            } else if (res.data) {
+                this.setMessage(res.data.status)
+            }
+        })
     }
 
     handleShowDeckCards(name) {
@@ -233,7 +240,7 @@ class App extends Component {
                         onSelectDeck={this.handleSelectDeck}
                         onShowDeckCards={this.handleShowDeckCards}
                     />
-                    <DeckCard{...this.state} handleSelectedDeckCard={this.handleDeckCard}/>
+                    <DeckCard {...this.state} handleSelectedDeckCard={this.handleDeckCard}/>
                 </div>
                 <div className="float-child">
                     <Game {...this.state} onPlaySubmit={this.handlePlay}/>

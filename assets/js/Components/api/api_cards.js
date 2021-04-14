@@ -17,6 +17,7 @@ export function deleteCards(title) {
 export function createCards(cards) {
     return fetchJson('/api/cards', {
         method: 'POST',
-        body: cards
+        body: cards,
+        mode: 'no-cors',
     });
 }
