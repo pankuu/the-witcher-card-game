@@ -22,16 +22,6 @@ class Deck
      */
     private $name;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity=Card::class, inversedBy="decks")
-//     */
-//    private $cards;
-//
-//    public function __construct()
-//    {
-//        $this->cards = new ArrayCollection();
-//    }
-
     public function getId(): ?int
     {
         return $this->id;
