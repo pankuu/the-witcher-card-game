@@ -71,11 +71,14 @@ abstract class AbstractCard implements CardInterface, Observer
             $this->move();
         }
 
+        $bonus = $this->getPowerBonus();
+        $powerSum = $this->power + $bonus;
+
         return [
             $this->name => [
-                'powerSum' => $this->power,
+                'powerSum' => $powerSum,
                 'cards' => $this->card,
-                'bonus' => $this->getPowerBonus()
+                'bonus' => $bonus,
             ]
         ];
     }
@@ -124,6 +127,6 @@ abstract class AbstractCard implements CardInterface, Observer
 
     protected function getPowerCard(): void
     {
-        $this->power += $this->cardPower + $this->getPowerBonus();
+        $this->power += $this->cardPower;
     }
 }
