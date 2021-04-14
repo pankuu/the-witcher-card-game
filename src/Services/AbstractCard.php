@@ -75,7 +75,7 @@ abstract class AbstractCard implements CardInterface, Observer
         $powerSum = $this->power + $bonus;
 
         return [
-            $this->name => [
+            $this->type => [
                 'powerSum' => $powerSum,
                 'cards' => $this->card,
                 'bonus' => $bonus,
