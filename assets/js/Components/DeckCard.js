@@ -2,7 +2,7 @@ import React  from "react";
 
 const DeckCard = (props) => {
 
-    const {selectedDeck, selectedCard, handleSelectedDeckCard} = props
+    const {selectedDeck, selectedCard, handleSelectedDeckCard, errorMessage} = props
 
     const handleClick = function (event, deckTitle, cardName) {
         event.preventDefault();
@@ -13,6 +13,11 @@ const DeckCard = (props) => {
     return (
         <div>
             <h5>Choose deck and cards</h5>
+            {errorMessage && (
+                <div className="alert alert-danger">
+                    {errorMessage}
+                </div>
+            )}
             {selectedDeck && <h6>Deck: {selectedDeck}</h6>}
             {selectedCard && <h6>Card: {selectedCard}</h6>}
             {selectedCard && selectedDeck &&

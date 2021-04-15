@@ -98,7 +98,7 @@ class DeckController extends AbstractController
         $em->flush();
 
         if ($errors) {
-            return $this->json($errors, Response::HTTP_OK);
+            return $this->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
         return $this->json([], Response::HTTP_NO_CONTENT);

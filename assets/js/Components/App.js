@@ -31,7 +31,8 @@ class App extends Component {
             selectedDeck: '',
             selectedDeck1: '',
             selectedCard: '',
-            game: []
+            game: [],
+            errorMessage: '',
         }
         this.messageTimeoutHandle = 0;
 
@@ -163,10 +164,16 @@ class App extends Component {
                 this.setMessage(`Successfully added card to deck: ${deck}`)
                 this.setState({
                     selectedDeck: '',
-                    selectedCard: ''
+                    selectedCard: '',
+                    errorMessage: ''
                 })
             } else if (res.data) {
                 this.setMessage(res.data.status)
+            }
+        }).catch((error) => {
+            if (error.response) {
+                this.setState({errorMessage: error.response.data.status})
+                // this.setMessage(error.response.data.status)
             }
         })
     }
@@ -240,7 +247,10 @@ class App extends Component {
                         onSelectDeck={this.handleSelectDeck}
                         onShowDeckCards={this.handleShowDeckCards}
                     />
-                    <DeckCard {...this.state} handleSelectedDeckCard={this.handleDeckCard}/>
+                    <DeckCard
+                        {...this.state}
+                        handleSelectedDeckCard={this.handleDeckCard}
+                    />
                 </div>
                 <div className="float-child">
                     <Game {...this.state} onPlaySubmit={this.handlePlay}/>

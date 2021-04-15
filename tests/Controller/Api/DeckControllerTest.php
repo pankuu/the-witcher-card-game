@@ -105,7 +105,7 @@ class DeckControllerTest extends DataFixtureTestCase
 
         $this->isJson();
         $this->assertArrayHasKey('status', $response);
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->keepDatabaseAfterTest();
     }
 
